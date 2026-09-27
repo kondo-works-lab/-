@@ -1,0 +1,13 @@
+# 外部通信を行わないための設定
+[browser]
+gatherUsageStats = false   # Streamlit の利用統計送信を無効化
+
+[server]
+address = "localhost"      # 自端末からのみアクセス可能
+headless = true
+
+[global]
+showWarningOnDirectExecution = false
+
+[client]
+toolbarMode = "viewer"     # Deploy ボタン等の外部サービス導線を非表示
