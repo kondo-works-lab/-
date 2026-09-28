@@ -1,6 +1,11 @@
 @echo off
 cd /d "%~dp0"
-set "LOG=%~dp0setup_log.txt"
+
+rem ライブラリの設置先。ツールのフォルダが深い場所にあっても
+rem Windows のパス長制限(260文字)を超えないよう、短い場所に固定する
+set "VENV=%LOCALAPPDATA%\expense-journal\venv"
+set "VPY=%VENV%\Scripts\python.exe"
+set "LOG=%LOCALAPPDATA%\expense-journal\setup_log.txt"
 
 rem Python の実行コマンドを探す(py ランチャー優先)
 set "PY="
@@ -16,25 +21,29 @@ set "RC=%errorlevel%"
 if "%RC%"=="3" goto :bit32
 if not "%RC%"=="0" goto :nopython
 
-rem セットアップ(完了印 .venv\setup_ok が無ければ毎回やり直す)
-if exist ".venv\setup_ok" goto :run
+rem 必要なライブラリが正しく入っていれば起動へ
+if exist "%VPY%" (
+  "%VPY%" -c "import streamlit.proto, pandas, openpyxl" >nul 2>nul && goto :run
+)
+
 echo 初回セットアップ中です。数分かかります...
-echo 途中経過は setup_log.txt に記録されます。
-if exist ".venv" rmdir /s /q ".venv"
-%PY% -m venv .venv > "%LOG%" 2>&1 || goto :error
-".venv\Scripts\python.exe" -m pip install --upgrade pip >> "%LOG%" 2>&1
-".venv\Scripts\python.exe" -m pip install -r requirements.txt >> "%LOG%" 2>&1 || goto :error
-echo ok> ".venv\setup_ok"
+if not exist "%LOCALAPPDATA%\expense-journal" mkdir "%LOCALAPPDATA%\expense-journal"
+if exist "%VENV%" rmdir /s /q "%VENV%"
+%PY% -m venv "%VENV%" > "%LOG%" 2>&1 || goto :error
+"%VPY%" -m pip install --upgrade pip >> "%LOG%" 2>&1
+"%VPY%" -m pip install -r requirements.txt >> "%LOG%" 2>&1 || goto :error
+"%VPY%" -c "import streamlit.proto, pandas, openpyxl" >> "%LOG%" 2>&1 || goto :error
 echo セットアップが完了しました。
 
 :run
 rem 起動を待ってからブラウザを開く
 start "" cmd /c "timeout /t 6 >nul & start http://localhost:8501"
 echo.
-echo ツールを起動しました。ブラウザが開かない場合は http://localhost:8501 を開いてください。
-echo 終了するときはこの黒い画面を閉じてください。
+echo ツールを起動しました。
+echo ブラウザが開かない場合は http://localhost:8501 を開いてください。
+echo 終了するときは、この黒い画面を閉じてください。
 echo.
-".venv\Scripts\python.exe" -m streamlit run app.py
+"%VPY%" -m streamlit run app.py
 pause
 exit /b 0
 
@@ -54,8 +63,8 @@ exit /b 1
 echo.
 echo セットアップに失敗しました。エラー内容(最後の 30 行):
 echo ------------------------------------------------------------
-powershell -NoProfile -Command "Get-Content -Tail 30 '%LOG%'"
+powershell -NoProfile -Command "Get-Content -Tail 30 -LiteralPath $env:LOG"
 echo ------------------------------------------------------------
-echo この内容、またはフォルダ内の setup_log.txt を送ってください。
+echo この画面の内容を送ってください。
 pause
 exit /b 1

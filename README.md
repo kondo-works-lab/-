@@ -17,7 +17,7 @@ CSV / Excel の取引明細を読み込み、摘要のキーワード部分一�
 ### Windows(かんたん)
 
 1. [python.org](https://www.python.org/downloads/) から Python をインストール(「Add python.exe to PATH」にチェック)
-2. このフォルダの `start.bat` をダブルクリック(初回のみ数分かけて自動セットアップ)
+2. このフォルダの `start.bat` をダブルクリック(初回のみ数分かけて自動セットアップ。ライブラリは `%LOCALAPPDATA%\expense-journal\venv` に入る)
 3. ブラウザで http://localhost:8501 が開く。終了は黒い画面を閉じる
 
 ### コマンドで起動する場合
