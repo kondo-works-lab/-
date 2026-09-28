@@ -1,1 +1,1 @@
-*.bat text eol=crlf
+start.bat -text

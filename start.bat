@@ -1,8 +1,7 @@
 @echo off
-chcp 65001 >nul
 cd /d "%~dp0"
 
-rem Python ã®å®Ÿè¡Œã‚³ãƒžãƒ³ãƒ‰ã‚’æŽ¢ã™(py ãƒ©ãƒ³ãƒãƒ£ãƒ¼å„ªå…ˆ)
+rem Python ‚ÌŽÀsƒRƒ}ƒ“ƒh‚ð’T‚·(py ƒ‰ƒ“ƒ`ƒƒ[—Dæ)
 set "PY="
 where py >nul 2>nul && set "PY=py"
 if not defined PY (
@@ -10,31 +9,31 @@ if not defined PY (
 )
 if not defined PY goto :nopython
 
-rem åˆå›žã®ã¿: å°‚ç”¨ç’°å¢ƒã®ä½œæˆã¨ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
+rem ‰‰ñ‚Ì‚Ý: ê—pŠÂ‹«‚Ìì¬‚Æƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒCƒ“ƒXƒg[ƒ‹
 if not exist ".venv\Scripts\python.exe" (
-  echo åˆå›žã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ä¸­ã§ã™ã€‚æ•°åˆ†ã‹ã‹ã‚Šã¾ã™...
+  echo ‰‰ñƒZƒbƒgƒAƒbƒv’†‚Å‚·B”•ª‚©‚©‚è‚Ü‚·...
   %PY% -m venv .venv || goto :error
   ".venv\Scripts\python.exe" -m pip install -r requirements.txt || goto :error
 )
 
-rem èµ·å‹•ã‚’å¾…ã£ã¦ã‹ã‚‰ãƒ–ãƒ©ã‚¦ã‚¶ã‚’é–‹ã
+rem ‹N“®‚ð‘Ò‚Á‚Ä‚©‚çƒuƒ‰ƒEƒU‚ðŠJ‚­
 start "" cmd /c "timeout /t 6 >nul & start http://localhost:8501"
 echo.
-echo ãƒ„ãƒ¼ãƒ«ã‚’èµ·å‹•ã—ã¾ã—ãŸã€‚ãƒ–ãƒ©ã‚¦ã‚¶ãŒé–‹ã‹ãªã„å ´åˆã¯ http://localhost:8501 ã‚’é–‹ã„ã¦ãã ã•ã„ã€‚
-echo çµ‚äº†ã™ã‚‹ã¨ãã¯ã“ã®é»’ã„ç”»é¢ã‚’é–‰ã˜ã¦ãã ã•ã„ã€‚
+echo ƒc[ƒ‹‚ð‹N“®‚µ‚Ü‚µ‚½Bƒuƒ‰ƒEƒU‚ªŠJ‚©‚È‚¢ê‡‚Í http://localhost:8501 ‚ðŠJ‚¢‚Ä‚­‚¾‚³‚¢B
+echo I—¹‚·‚é‚Æ‚«‚Í‚±‚Ì•‚¢‰æ–Ê‚ð•Â‚¶‚Ä‚­‚¾‚³‚¢B
 echo.
 ".venv\Scripts\python.exe" -m streamlit run app.py
 pause
 exit /b 0
 
 :nopython
-echo Python ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚python.org ã‹ã‚‰ Python ã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ã¦ãã ã•ã„ã€‚
-echo ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«æ™‚ã«ã€ŒAdd python.exe to PATHã€ã«ãƒã‚§ãƒƒã‚¯ã‚’å…¥ã‚Œã¦ãã ã•ã„ã€‚
+echo Python ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBpython.org ‚©‚ç Python ‚ðƒCƒ“ƒXƒg[ƒ‹‚µ‚Ä‚­‚¾‚³‚¢B
+echo ƒCƒ“ƒXƒg[ƒ‹Žž‚ÉuAdd python.exe to PATHv‚Éƒ`ƒFƒbƒN‚ð“ü‚ê‚Ä‚­‚¾‚³‚¢B
 pause
 exit /b 1
 
 :error
-echo ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã«å¤±æ•—ã—ã¾ã—ãŸã€‚ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆæŽ¥ç¶šã‚’ç¢ºèªã—ã¦ã€ã‚‚ã†ä¸€åº¦ start.bat ã‚’å®Ÿè¡Œã—ã¦ãã ã•ã„ã€‚
-echo ä½•åº¦ã‚‚å¤±æ•—ã™ã‚‹å ´åˆã¯ .venv ãƒ•ã‚©ãƒ«ãƒ€ã‚’å‰Šé™¤ã—ã¦ã‹ã‚‰å†å®Ÿè¡Œã—ã¦ãã ã•ã„ã€‚
+echo ƒZƒbƒgƒAƒbƒv‚ÉŽ¸”s‚µ‚Ü‚µ‚½BƒCƒ“ƒ^[ƒlƒbƒgÚ‘±‚ðŠm”F‚µ‚ÄA‚à‚¤ˆê“x start.bat ‚ðŽÀs‚µ‚Ä‚­‚¾‚³‚¢B
+echo ‰½“x‚àŽ¸”s‚·‚éê‡‚Í .venv ƒtƒHƒ‹ƒ_‚ðíœ‚µ‚Ä‚©‚çÄŽÀs‚µ‚Ä‚­‚¾‚³‚¢B
 pause
 exit /b 1
