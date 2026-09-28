@@ -12,8 +12,9 @@ if not defined PY goto :nopython
 
 rem Python のバージョンと 64bit かどうかを確認
 %PY% -c "import sys,struct; print(sys.version); sys.exit(0 if struct.calcsize('P')==8 else 3)"
-if errorlevel 3 goto :bit32
-if errorlevel 1 goto :nopython
+set "RC=%errorlevel%"
+if "%RC%"=="3" goto :bit32
+if not "%RC%"=="0" goto :nopython
 
 rem セットアップ(完了印 .venv\setup_ok が無ければ毎回やり直す)
 if exist ".venv\setup_ok" goto :run
